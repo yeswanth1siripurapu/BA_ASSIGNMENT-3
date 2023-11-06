@@ -1,0 +1,173 @@
+---
+title: "BA_ASSIGNMENT 3"
+author: "Yeswanth Siripurapu"
+date: "2023-11-06"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+#Run the following code in R-studio to create two variables X and Y
+```{r}
+set.seed(2017)
+X <- runif(100) * 10
+Y <- X * 4 + 3.45
+Y <- rnorm(100) * 0.29 * Y + Y
+
+```
+
+```{r}
+set.seed(2017)
+X <- runif(100) * 10
+Y <- X * 4 + 3.45
+Y <- rnorm(100) * 0.29 * Y + Y
+
+plot(X, Y, main = "Scatter plot of Y against X", xlab = "X", ylab = "Y")
+
+```
+
+#b) Construct a simple linear model of Y based on X. Write the equation that 
+#explains Y based on X. What is the accuracy of this model
+```{r}
+model <- lm(Y ~ X)
+summary(model)
+
+```
+#C)How the Coefficient of Determination, R 2, of the model above is related to
+#the correlation coefficient of X and Y? R-squared (R2) and the correlation coefficient (r) have the following
+#relationships:The square of the correlation coefficient (r) is known as R-squared (R²). 
+#In this instance, the linear relationship with X accounts for roughly 65.17% of
+#the variance in Y, as indicated by the R2 of approximately 0.6517.
+
+#The degree and direction of the linear link between X and Y are measured by the
+#correlation coefficient (r). The value of r in a basic linear regression is
+#obtained under "Estimate" and is equal to the coefficient for X (3.6108 in
+#the output).
+
+#Accordingly, in this instance, the coefficient of determination (R2) is roughly
+#0.6517 and the correlation coefficient (r) is roughly 3.6108. The percentage of
+#Y's volatility that can be predicted from X is represented by R².
+
+
+#QUESTION 2
+#a) James wants to buy a car. He and his friend, Chris, have different 
+#opinions about the HorsePower (hp) of cars. James think the weight of a car 
+#(wt) can be used to estimate the Horse Power of the car while Chris thinks the
+#fuel consumption expressed in Mile Per Gallon (mpg), is a better estimator of 
+#the (hp). Who do you think is right? Construct simple linear models usingmtcars
+#data to answer the question.
+
+#Building a model based on James estimation:
+```{r}
+# Load the mtcars dataset 
+data(mtcars)
+
+# Construct a linear model using weight (wt) to estimate horsepower (hp)
+model_wt_hp <- lm(hp ~ wt, data = mtcars)
+summary(model_wt_hp)
+```
+
+
+```{r}
+# Construct a linear model using mileage per gallon (mpg) to estimate horsepower (hp)
+model_mpg_hp <- lm(hp ~ mpg, data = mtcars)
+summary(model_mpg_hp)
+```
+#The link between horsepower and fuel efficiency (mpg) appears to have a greater
+#R-squared value than the association between horsepower and vehicle weight (wt),
+#according to the R-squared values obtained from the linear regression models.
+#Since fuel consumption (mpg) is a better predictor of horse power (hp) and fits
+#the dataset better for predicting hp, it appears that Chris's point of view is
+#more valid.
+
+
+
+#b) Build a model that uses the number of cylinders (cyl) and the mile per 
+#gallon (mpg) values of a car to predict the car Horse Power (hp). Using this 
+#model, what is the estimated Horse Power of a car with 4 calendar and mpg of 
+#22?
+
+
+```{r}
+# Build the model using cyl and mpg to predict hp
+model_cyl_mpg <- lm(hp ~ cyl + mpg, data = mtcars)
+
+# Summary of the model
+summary(model_cyl_mpg)
+```
+#Based on this, the estimated Horse Power of a car with 4 cylinders and mpg of 
+#22 is approximately 88.93618
+
+
+#Question 3. For this question, we are going to use BostonHousing dataset. The dataset is
+#in ‘mlbench’ package, so we first need to install the package, call the library
+#and load the dataset using the following commands
+```{r}
+# Predicting hp for a car with 4 cylinders and mpg of 22
+new_data <- data.frame(cyl = 4, mpg = 22)
+predict(model_cyl_mpg, newdata = new_data)
+```
+
+
+```{r}
+# Load the mlbench library
+library(mlbench)
+```
+
+```{r}
+# Load the Boston Housing dataset
+data(BostonHousing)
+```
+#a) Build a model to estimate the median value of owner-occupied homes (medv)
+#based on the following variables: crime crate (crim), proportion of residential 
+#land zoned for lots over 25,000 sq.ft (zn), the local pupil-teacher ratio
+#(ptratio) and weather the whether the tract bounds Chas River(chas). Is this
+#an accurate model?
+```{r}
+# Build the linear regression model
+model_medv <- lm(medv ~ crim + zn + ptratio + chas, data = BostonHousing)
+
+# Summary of the model
+summary(model_medv)
+```
+#b) Use the estimated coefficient to answer these questions?
+#I. Imagine two houses that are identical in all aspects but one bounds the Chas
+#River and the other does
+#not. Which one is more expensive and by how much?
+
+#Answer: Chas has two levels: '0' and '1'. Those who cross the Chas River are
+#denoted by a "1," while those who do not are denoted by a "0."The data 
+#description states that the median value of owner-occupied dwellings is $1,000,
+#and the coefficient of chas1 is 4.58393. The product of coefficient and
+#multiplier is 4583.93$. this costs a lot.
+
+#II. Imagine two houses that are identical in all aspects but in the neighborhood
+#of one of them the pupilteacher ratio is 15 and in the other one is 18. Which 
+#one is more expensive and by how much?
+
+#Answer: In thousands, the price of a house decreases by 1.49367, or 1493.67, for
+#If ptratio is 15. Likewise, there will be a drop of 18 * 1493.67 = 26886.06 if
+#ptratio is 18.Therefore, if the pt ratio is 15 and the pt ratio is 18, the
+#difference is $4481.01.
+ 
+#c) Which of the variables are statistically important (i.e. related to the 
+#house price)? Hint: use the p-values of the coefficients to answer.
+
+#Answer: Indeed, we can safely reject the default null hypothesis—that is, the
+#idea that there is no relationship between house price and other factors in the #model—because the p-values of all the variables do not equal zero. All of the 
+#factors are therefore statistically significant.
+
+#d) Use the anova analysis and determine the order of importance of these four
+#variables
+```{r}
+# ANOVA analysis for the model
+anova_result <- anova(model_medv)
+
+# Display the ANOVA table
+anova_result
+```
+#Answer: It is evident that the crim variable explains a substantially larger
+#amount of variability (sum squared) than the other factors. We could surmise 
+#that the model was greatly enhanced by the addition of the crim. However,
+#residuals indicate that a significant amount of variability remains unexplained.
+#The significance is as follows: crim, p tratio, zn, chas
